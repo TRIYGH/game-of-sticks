@@ -1,5 +1,7 @@
 #W2D2
 
+import random
+
 def get_game_sticks():
     while True:
         num = input("How many sticks would you like to begin with ?")
@@ -7,20 +9,32 @@ def get_game_sticks():
             return int(num)
 
 
+def initialize_hats(sticks):
+    counter = 1
+    hat = {}
+
+    while counter < (sticks+1):
+        hat.update({counter: [1,2,3]})
+        counter += 1
+    return hat
+
+
 def player1_choice():
     while True:
         pick = input("\nPLAYER 1:  How many sticks would you like to pick up? ")
         if validate_input(pick):
-            if int(pick) in [1,2,3]:
-                return int(pick)
+            pick = int(pick)
+            if pick in [1,2,3]:
+                return pick
 
 
 def player2_choice():
     while True:
         pick = input("\nPLAYER 2:  How many sticks would you like to pick up? ")
         if validate_input(pick):
-            if int(pick) in [1,2,3]:
-                return int(pick)
+            pick = int(pick)
+            if pick in [1,2,3]:
+                return pick
 
 
 def update_game(total_sticks):
@@ -34,6 +48,29 @@ def validate_input(data_in):
         return False
 
 
+def get_players():
+    while True:
+        print("====  Choose your players  ====")
+        print("(1) You against the Computer")
+        entry = input("(2) Players                ")
+        if validate_input(entry):
+            return int(entry)
+
+
+def computer_picks(hats, index):
+    if index == 1:
+        return 1
+    choices = hats[index]               #choices is a list
+    num = get_rand_num(len(choices))    #how many in list ? 3 is minimum
+    return choices[num]                 #return int at position: num
+
+
+def get_rand_num(max):
+    return random.randint(0, max)
+
+
+#               ===================   MAIN   ===================              #
+
 def main():
     P1 = "won"
     P2 = "won"
@@ -44,6 +81,14 @@ def main():
     print('\n\n')
 
     total_sticks = get_game_sticks()
+
+    num_players = get_players()
+    if num_players == 1:
+        hats = initialize_hats(total_sticks)
+
+
+
+#                   ======   GAME ENGINE   ======                      #
 
     while True:
         update_game(total_sticks)
@@ -57,7 +102,11 @@ def main():
             P1 = "lost"
             break
 
-        sticks_picked = player2_choice()
+        if num_players == 2:
+            sticks_picked = player2_choice()
+        else:
+            sticks_picked = computer_picks(hats, total_sticks)
+
         total_sticks -= sticks_picked
 
         if total_sticks <= 0:
