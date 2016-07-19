@@ -1,6 +1,6 @@
 #tests
 
-from sticks import validate_input, initialize_hats, get_rand_num, computer_picks
+from sticks import validate_input, initialize_hats, get_rand_num, computer_picks, update_AI
 
 def test_input():
     assert validate_input("3") == True
@@ -18,4 +18,13 @@ def test_random():
 def test_computer_pick():
     test_hat = {1: [1,1,1,2,2,3], 2: [1,1,1,1,1,1,2,2,2,2,3]}  #6   11
     index = 1
-    assert computer_picks(test_hat, index) in [1,2,3]
+    guess_hats = ()
+    assert computer_picks(test_hat, index, guess_hats) in [1,2,3]
+
+
+def test_AI_learn():
+    test_hat = {1: [1,2,3], 2: [1,2,2,3], 3: [1,2,2,3,3]}
+    guess_hats = [(3,3), (2,2), (1,1)]
+    answer = {1: [1,2,3,1], 2: [1,2,2,3,2], 3: [1,2,2,3,3,3]}
+    assert update_AI(guess_hats, test_hat) == answer
+#print(update_AI(guess_hats, test_hat))
